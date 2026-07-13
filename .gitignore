@@ -3,11 +3,20 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .venv/
+backend/.venv/
 *.db
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage/
+htmlcov/
+*.log
 
 # Node
 node_modules/
 dist/
+frontend/.vite/
 
 # IDE
 .idea/
@@ -26,3 +35,5 @@ data/*
 # Environment
 .env
 .env.local
+.env.*
+!.env.sample
