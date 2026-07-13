@@ -1,0 +1,37 @@
+[project]
+name = "smart-salary-engine"
+version = "0.1.0"
+description = "Smart Salary Engine (SSE) - 智能薪资数据整理与工资核算平台"
+requires-python = ">=3.13,<3.15"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.34.0",
+    "sqlalchemy>=2.0.0",
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.7.0",
+    "openpyxl>=3.1.0",
+    "pandas>=2.2.0",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0.0",
+    "python-multipart>=0.0.18",
+    "python-calamine>=0.3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24.0",
+    "httpx>=0.28.0",
+    "coverage>=7.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["app*"]

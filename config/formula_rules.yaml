@@ -1,0 +1,161 @@
+# 工资公式配置 — 薪资核算系统 V2
+# 按照新薪资构成规则：
+# basic_salary = salary_standard × 70%
+# performance_salary_standard = salary_standard × 30%
+# performance_salary_actual = performance_salary_standard × performance_score
+# gross_salary_before_attendance = basic_salary + performance_salary_actual
+# attendance_deduction = gross_salary_before_attendance / standard_attendance_days × leave_days
+# gross_salary = gross_salary_before_attendance - attendance_deduction + allowance_total + overtime_pay + other_income
+# deduction_total = other_deduction + social_security_personal + housing_fund_personal
+# net_salary = gross_salary - deduction_total
+
+formula_version: v2
+
+rounding:
+  default_scale: 2
+  default_mode: HALF_UP
+  intermediate_scale: 8
+
+items:
+  # ============ 基础输入 ============
+  - item_code: salary_standard
+    item_name: 满绩效月薪标准
+    item_type: input
+    data_type: money
+    source_field: salary_standard
+    required: true
+    order: 1
+
+  - item_code: performance_score
+    item_name: 绩效得分
+    item_type: input
+    data_type: number
+    source_field: performance_score
+    required: false
+    order: 2
+
+  - item_code: leave_days
+    item_name: 请假天数
+    item_type: input
+    data_type: number
+    source_field: leave_days
+    required: false
+    order: 3
+
+  - item_code: standard_attendance_days
+    item_name: 应出勤天数
+    item_type: input
+    data_type: number
+    source_field: standard_attendance_days
+    required: false
+    order: 4
+
+  # ============ 中间计算 ============
+  - item_code: basic_salary
+    item_name: 基本工资标准
+    item_type: intermediate
+    data_type: money
+    expression: "salary_standard * 0.70"
+    dependencies: [salary_standard]
+    required: true
+    rounding:
+      scale: 6
+      mode: HALF_UP
+    order: 10
+
+  - item_code: performance_salary_standard
+    item_name: 标准绩效工资
+    item_type: intermediate
+    data_type: money
+    expression: "salary_standard * 0.30"
+    dependencies: [salary_standard]
+    required: true
+    rounding:
+      scale: 6
+      mode: HALF_UP
+    order: 20
+
+  - item_code: performance_score_final
+    item_name: 最终绩效得分
+    item_type: intermediate
+    data_type: number
+    expression: "if_null(performance_score, 1)"
+    dependencies: [performance_score]
+    required: false
+    order: 25
+
+  - item_code: performance_salary_actual
+    item_name: 实际绩效工资
+    item_type: intermediate
+    data_type: money
+    expression: "performance_salary_standard * performance_score_final"
+    dependencies: [performance_salary_standard, performance_score_final]
+    required: true
+    rounding:
+      scale: 6
+      mode: HALF_UP
+    order: 30
+
+  - item_code: gross_salary_before_attendance
+    item_name: 考勤前应发工资
+    item_type: intermediate
+    data_type: money
+    expression: "basic_salary + performance_salary_actual"
+    dependencies: [basic_salary, performance_salary_actual]
+    required: true
+    order: 40
+
+  - item_code: attendance_deduction
+    item_name: 考勤扣款
+    item_type: intermediate
+    data_type: money
+    expression: "if_null(gross_salary_before_attendance, 0) / if_null(standard_attendance_days, 21.75) * if_null(leave_days, 0)"
+    dependencies: [gross_salary_before_attendance, standard_attendance_days, leave_days]
+    required: false
+    rounding:
+      scale: 6
+      mode: HALF_UP
+    order: 50
+
+  # ============ 补贴合计（保留现有）============
+  - item_code: allowance_total
+    item_name: 补贴合计
+    item_type: add
+    data_type: money
+    expression: "sum_values(meal_allowance, traffic_allowance, communication_allowance)"
+    dependencies: [meal_allowance, traffic_allowance, communication_allowance]
+    required: false
+    order: 60
+
+  # ============ 应发工资 ============
+  - item_code: gross_salary
+    item_name: 应发工资
+    item_type: intermediate
+    data_type: money
+    expression: "gross_salary_before_attendance - attendance_deduction + allowance_total + overtime_pay + other_income"
+    dependencies: [gross_salary_before_attendance, attendance_deduction, allowance_total, overtime_pay, other_income]
+    required: true
+    order: 100
+
+  # ============ 扣款合计 ============
+  - item_code: deduction_total
+    item_name: 扣款合计
+    item_type: intermediate
+    data_type: money
+    expression: "other_deduction + social_security_personal + housing_fund_personal"
+    dependencies: [other_deduction, social_security_personal, housing_fund_personal]
+    required: false
+    order: 110
+
+  # ============ 最终 ============
+  - item_code: net_salary
+    item_name: 实发工资
+    item_type: final
+    data_type: money
+    expression: "gross_salary - deduction_total"
+    dependencies: [gross_salary, deduction_total]
+    required: true
+    order: 200
+    rounding:
+      scale: 2
+      mode: HALF_UP

@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+*.db
+
+# Node
+node_modules/
+dist/
+
+# IDE
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Project data
+uploads/*
+exports/*
+data/*
+!uploads/.gitkeep
+!exports/.gitkeep
+!data/.gitkeep
+
+# Environment
+.env
+.env.local

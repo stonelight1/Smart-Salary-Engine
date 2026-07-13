@@ -1,0 +1,47 @@
+# Sheet 识别规则
+# name_score: Sheet 名关键词匹配 (权重 0.4)
+# header_score: 表头字段命中率 (权重 0.5)
+# data_score: 数据特征识别 (权重 0.1)
+# sheet_score = name_score * 0.4 + header_score * 0.5 + data_score * 0.1
+# >= 0.85: 自动确认, 0.60-0.85: 需人工确认, < 0.60: unknown
+
+thresholds:
+  auto_confirm: 0.85
+  need_confirm: 0.60
+
+sheet_types:
+  salary_main:
+    name: 工资主表
+    keywords: ["工资", "薪资", "工资表", "薪资表", "应发", "实发"]
+    required_fields: ["employee_name"]
+    expected_field_types: ["money"]
+
+  attendance:
+    name: 考勤表
+    keywords: ["考勤", "出勤", "请假", "迟到", "缺勤"]
+    required_fields: ["employee_name"]
+
+  bonus:
+    name: 奖金表
+    keywords: ["奖金", "绩效", "提成", "奖励"]
+    required_fields: ["employee_name"]
+
+  deduction:
+    name: 扣款表
+    keywords: ["扣款", "罚款", "扣除"]
+    required_fields: ["employee_name"]
+
+  social_security:
+    name: 社保公积金表
+    keywords: ["社保", "公积金", "五险", "五险一金"]
+    required_fields: ["employee_name"]
+
+  allowance:
+    name: 补贴表
+    keywords: ["补贴", "补助", "津贴", "餐补", "交通补"]
+    required_fields: ["employee_name"]
+
+  supplement:
+    name: 其他补充表
+    keywords: ["补充", "其他", "临时"]
+    required_fields: ["employee_name"]

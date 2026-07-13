@@ -1,0 +1,63 @@
+# 导出列模板配置
+
+export_defaults:
+  use_main_workbook_template: true
+  include_trace: true
+  include_issues: true
+  include_sources: true
+
+result_sheet:
+  sheet_name: 工资结果
+  columns:
+    - field_code: employee_name
+      column_name: 员工姓名
+      required: true
+    - field_code: department
+      column_name: 部门
+      required: false
+    - field_code: base_salary
+      column_name: 基本工资
+      required: true
+    - field_code: attendance_deduction
+      column_name: 考勤扣款
+      required: false
+    - field_code: performance_bonus
+      column_name: 绩效奖金
+      required: false
+    - field_code: allowance_total
+      column_name: 补贴合计
+      required: false
+    - field_code: other_deduction
+      column_name: 其他扣款
+      required: false
+    - field_code: social_security_personal
+      column_name: 社保个人扣款
+      required: false
+    - field_code: housing_fund_personal
+      column_name: 公积金个人扣款
+      required: false
+    - field_code: gross_salary
+      column_name: 应发工资
+      required: true
+    - field_code: deduction_total
+      column_name: 扣款合计
+      required: false
+    - field_code: net_salary
+      column_name: 实发工资
+      required: true
+
+trace_sheet:
+  sheet_name: 计算过程
+  include_employee: true
+  include_formula: true
+  include_inputs: true
+  include_sources: true
+
+issues_sheet:
+  sheet_name: 异常报告
+  include_resolved: true
+  include_ignored: true
+
+sources_sheet:
+  sheet_name: 字段来源
+  include_manual: true

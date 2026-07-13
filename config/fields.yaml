@@ -1,0 +1,113 @@
+# 标准字段配置 — 薪资核算系统 V2
+# 启动时加载，配置错误将阻止服务启动
+
+fields:
+  # ============ 基础信息 ============
+  employee_name:
+    name: 员工姓名
+    type: string
+    required: true
+    aliases: ["姓名", "员工", "员工姓名", "人员姓名", "名字"]
+    match_threshold: 0.85
+
+  employee_no:
+    name: 员工编号
+    type: string
+    required: false
+    aliases: ["员工编号", "工号", "编号", "员工ID", "员工工号"]
+
+  department:
+    name: 部门
+    type: string
+    required: false
+    aliases: ["部门", "所属部门", "组织", "科室"]
+
+  position:
+    name: 岗位
+    type: string
+    required: false
+    aliases: ["岗位", "职位", "职务", "岗位名称"]
+
+  # ============ 工资标准（无固定工资概念）============
+  salary_standard:
+    name: 满绩效月薪标准
+    type: money
+    required: true
+    aliases: ["月薪标准", "满绩效月薪", "薪资标准", "工资标准", "全额工资", "月薪", "月薪总额"]
+
+  # ============ 绩效相关 ============
+  performance_score:
+    name: 绩效得分
+    type: number
+    required: false
+    aliases: ["绩效得分", "绩效分", "得分", "评分", "绩效系数"]
+
+  # ============ 考勤相关 ============
+  leave_days:
+    name: 请假天数
+    type: number
+    required: false
+    aliases: ["请假天数", "请假", "缺勤天数", "请假合计"]
+
+  standard_attendance_days:
+    name: 应出勤天数
+    type: number
+    required: false
+    aliases: ["应出勤天数", "应出勤", "标准出勤天数", "计薪天数", "应到天数"]
+
+  actual_attendance_days:
+    name: 实际出勤天数
+    type: number
+    required: false
+    aliases: ["实际出勤天数", "实际出勤", "出勤天数", "实到天数"]
+
+  # ============ 补贴（保留现有）============
+  meal_allowance:
+    name: 餐补
+    type: money
+    required: false
+    aliases: ["餐补", "伙食补贴", "餐饮补贴"]
+
+  traffic_allowance:
+    name: 交通补贴
+    type: money
+    required: false
+    aliases: ["交通补贴", "交通补", "车补"]
+
+  communication_allowance:
+    name: 通讯补贴
+    type: money
+    required: false
+    aliases: ["通讯补贴", "通讯补", "话补", "通讯补助"]
+
+  # ============ 扣款（保留现有）============
+  other_deduction:
+    name: 其他扣款
+    type: money
+    required: false
+    aliases: ["扣款", "其他扣款", "罚款", "扣除"]
+
+  social_security_personal:
+    name: 社保个人扣款
+    type: money
+    required: false
+    aliases: ["社保个人", "社保扣款", "养老个人", "医疗个人", "失业保险"]
+
+  housing_fund_personal:
+    name: 公积金个人扣款
+    type: money
+    required: false
+    aliases: ["公积金个人", "公积金扣款", "住房公积金"]
+
+  # ============ 其他收入（保留现有）============
+  overtime_pay:
+    name: 加班费
+    type: money
+    required: false
+    aliases: ["加班费", "加班工资", "加班"]
+
+  other_income:
+    name: 其他应发
+    type: money
+    required: false
+    aliases: ["其他应发", "其他收入", "补发"]

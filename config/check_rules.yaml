@@ -1,0 +1,110 @@
+# 数据检查规则配置
+
+check_rules:
+  # ---- 员工检查 ----
+  required_employee_name:
+    name: 姓名不能为空
+    level: BLOCK
+    type: required
+    field: employee_name
+    message: "员工姓名不能为空"
+
+  employee_name_duplicate:
+    name: 姓名重复
+    level: BLOCK
+    type: duplicate
+    field: employee_name
+    message: "发现同名员工，请检查 Excel 后重新导入"
+
+  # ---- 必填字段检查 ----
+  required_base_salary:
+    name: 基本工资不能为空
+    level: BLOCK
+    type: required
+    field: base_salary
+    message: "基本工资缺失，无法计算工资"
+
+  # ---- 金额格式检查 ----
+  money_format:
+    name: 金额格式检查
+    level: BLOCK
+    type: money_format
+    fields: [base_salary, performance_bonus, other_deduction, social_security_personal, housing_fund_personal, attendance_deduction, meal_allowance, traffic_allowance, communication_allowance]
+
+  # ---- 逻辑范围检查 ----
+  attendance_range:
+    name: 出勤天数范围检查
+    level: WARN
+    type: range
+    field: attendance_days
+    min: 0
+    max: 31
+    message: "出勤天数超出合理范围"
+
+  base_salary_negative:
+    name: 基本工资不能为负
+    level: BLOCK
+    type: expression
+    field: base_salary
+    expression: "base_salary >= 0"
+    message: "基本工资不能为负"
+
+  # ---- 工资异常 ----
+  net_salary_negative:
+    name: 实发工资不能为负
+    level: BLOCK
+    type: expression
+    expression: "net_salary >= 0"
+    message: "实发工资不能为负"
+
+  deduction_too_high:
+    name: 扣款过高
+    level: WARN
+    type: expression
+    expression: "other_deduction + social_security_personal + housing_fund_personal <= base_salary + performance_bonus"
+    message: "扣款合计超过应发工资"
+
+  salary_too_high:
+    name: 工资异常偏高
+    level: WARN
+    type: expression
+    expression: "net_salary <= 100000"
+    message: "实发工资超过 100000 元，请复核"
+
+  # ---- 列检查 ----
+  name_column_missing:
+    name: 缺少姓名列
+    level: BLOCK
+    type: column_missing
+    field: employee_name
+    message: "缺少姓名列，无法建立员工数据池"
+
+  required_column_missing:
+    name: 必填列缺失
+    level: BLOCK
+    type: column_missing
+    fields: [base_salary]
+    message: "必填字段列缺失"
+
+  # ---- Sheet 检查 ----
+  main_sheet_missing:
+    name: 缺少工资主表
+    level: BLOCK
+    type: sheet_missing
+    sheet_type: salary_main
+    message: "没有识别到工资主表"
+
+  # ---- 数据合并检查 ----
+  data_conflict:
+    name: 字段数据冲突
+    level: BLOCK
+    type: data_conflict
+    conflict_field_types: [money]
+    message: "多来源字段值不同，需要选择来源"
+
+  # ---- 文件检查 ----
+  file_parse_failed:
+    name: 文件解析失败
+    level: BLOCK
+    type: file_parse
+    message: "Excel 文件解析失败，请确认文件未损坏"
